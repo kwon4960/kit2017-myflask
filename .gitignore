@@ -1,7 +1,11 @@
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,code,python,flask
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,code,python,flask
-
+## 가상환경 폴더 ###
 myenv/
+
+## 게임 save.txt ##
+save.txt 
 
 ### Code ###
 .vscode/*
