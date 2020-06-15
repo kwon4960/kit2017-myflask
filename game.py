@@ -17,4 +17,4 @@ def set_charact(name):
     for key in character:
         print("%s:%s" % (key, character[key]))
         f.write("%s:%s\n" % (key, character[key]))
-    f.close() 
+    f.close()   
