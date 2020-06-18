@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, abort
+
+from flask import Flask, request, render_template, redirect, url_for, abort, session
 
 import game
 import json
@@ -49,58 +50,34 @@ def login():
     else:
         id = request.form['id']
         pw = request.form['pw']
-        print (id,type(id))
-        print (pw,type(pw))
+       
         if id == 'abc' and pw == '1234':
-            return "안녕하세요~ {} 님".format(id)
+            return '''
+                <script> alert("안녕하세요~ {}님");
+                location.href="/form"
+                </script>
+            '''.format (id)
         else:
             return "아이디 또는 패스워드를 확인 하세요."
 
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('form'))
+
 @app.route('/form')
 def form():
-    return render_template('test.html')
+    if 'user' in session:
+        return render_template('test.html')
+    return redirect(url_for('login'))
 
-@app.route('/method', methods=['GET', 'POST'])
-def method():
-    if request.method == 'GET':
-        return 'GET 으로 전송이다.'
-    else:
-        num = request.form['num']
-        name = request.form['name']
-        print(num, name)
-        dbdb.insert_data(num, name)
-        return 'POST 이다. 학번은: {} 이름은: {}'.format(num, name)  
-
-@app.route('/getinfo')
-def getinfo():
-    ret = dbdb.select_all()
-    print(ret[3])
-    return render_template('getinfo.html', data=ret)
-    # return '번호 : {}, 이름 : {}'.format(student[0], student[1])
-    
-@app.route('/naver')
-def naver():
-    return redirect("https://www.naver.com/")
-
-@app.route('/kakao')
-def daum():
-    return redirect("https://www.daum.net/")
-
-@app.route('/urltest')
-def url_test():
-    return redirect(url_for('naver'))
-
-@app.route('/move/<site>')
-def move_site(site):
-    if site == 'naver':
-        return redirect(url_for('naver'))
-    elif site == 'daum':
-        return redirect(url_for('daum'))
-
-@app.route('/img')
-def img():
-    return render_template("image.html")
-
-if __name__ == '__main__':
+@app.route('/method', methods=['GET', 'POST']) 
+def method(): 
+    if request.method == 'GET': 
+        return 'GET 으로 전송이다.' 
+    else: num = request.form["num"]
+        name = request.form["name"]
+        return 'POST 이다. 학번은: {} 이름은: {}'.format(num, name)
+if __name__ == '__main__': 
     app.run(debug=True)
- 
+
