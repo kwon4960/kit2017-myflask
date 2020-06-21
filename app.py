@@ -7,6 +7,8 @@ import dbdb
 
 app = Flask(__name__)
 
+app.secret_key = b'aaa!111/ '
+
 @app.route('/')
 def index():
     return '메인페이지'
@@ -26,7 +28,7 @@ def gamestart():
         data = f.read()
         character = json.loads(data)
         print(character['items'])
-    return  "{} 이 {} 아이템을 사용 해서 이겼다".format(character["name"], character["items"][0])
+    return  "{} 이 {} 아이템    을 사용 해서 이겼다".format(character["name"], character["items"][0])
 
 @app.route('/input/<int:num>')
 def input_num(num):
@@ -53,11 +55,17 @@ def login():
         print (id,type(id))
         print (pw,type(pw))  
         ret = dbdb.select_user(id, pw) 
-        print(ret)
+        print(ret[2])
         if ret != None:
-            return "안녕하세요~ {} 님".format(ret[2])
+            session['user'] = id
+            return redirect(url_for('index'))
         else:    
-            return "아이디 또는 패스 워드를 확인 하세요."
+            return  redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index  '))
 
 # 회원 가입 
 @app.route('/join', methods=['GET', 'POST'])
@@ -82,10 +90,7 @@ def join():
         dbdb.select_user(id, pw, name) 
         return redirect(url_for('login'))
 
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect(url_for('form'))
+
 
 @app.route('/form')
 def form():
@@ -107,10 +112,13 @@ def login():
 
 @app.route('/getinfo')
 def getinfo():
-    ret = dbdb.select_all()
-    print(ret[3])
-    return render_template('getinfo.html', data=ret)
-    # return '번호 : {}, 이름 : {}'.format(student[0], student[1])
+    if 'user' in session
+        ret = dbdb.select_all()
+        print(ret[3])
+        return render_template('getinfo.html', data=ret)
+
+    return redirect(url_for('login'))
+   
     
 @app.route('/naver')
 def naver():

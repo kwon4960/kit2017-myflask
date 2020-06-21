@@ -1,6 +1,9 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends "layout.html" %}
+{% block title %}메인 페이지{% endblock %}
+{% blcok head &}
+  {{ super() }}
+{% endblock %}
+{% block eontent %}
 
 <h2>KIT 회원가입</h2>
 
@@ -12,5 +15,4 @@
   <input type="submit" value="확인">
 </form>
 
-</body>
-</html> 
+{% endblock %}
